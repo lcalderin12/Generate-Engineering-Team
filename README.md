@@ -22,9 +22,7 @@ Use it to create team template of engineers
 use jest with the provided code
 ## Repositories
 - [GitHub Portfolio](https://github.com/lcalderin12)
-- [Project Repo](git@github.com:lcalderin12/Generate-Engineering-Team.git)
 ## Questions?
-- lcalderin12
 - luiscalderin12@gmail.com
 ## GitHub Profile
 ![Profile Image](https://avatars2.githubusercontent.com/u/24910227?v=4)
