@@ -10,12 +10,32 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-let emplist =[];
+let empList =[];
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
-const empQuestions = [
+// After the user has input all employees desired, call the `render` function (required
+// above) and pass in an array containing all employee objects; the `render` function will
+// generate and return a block of HTML including templated divs for each employee!
+
+// After you have your html, you're now ready to create an HTML file using the HTML
+// returned from the `render` function. Now write it to a file named `team.html` in the
+// `output` folder. You can use the variable `outputPath` above target this location.
+// Hint: you may need to check if the `output` folder exists and create it if it
+// does not.
+
+// HINT: each employee type (manager, engineer, or intern) has slightly different
+// information; write your code to ask different questions via inquirer depending on
+// employee type.
+
+// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
+// and Intern classes should all extend from a class named Employee; see the directions
+// for further information. Be sure to test out each class and verify it generates an
+// object with the correct structure and methods. This structure will be crucial in order
+// for the provided `render` function to work! ```
+
+const empQs = [
     {
         type:"input",
         message:"Please type your name",
@@ -44,7 +64,7 @@ const empQuestions = [
     },
 ];
 
-const engQuestion = [
+const engQs = [
 	{
 		type: "input",
 		message: "What is the GitHub user-name?",
@@ -52,7 +72,7 @@ const engQuestion = [
 	}
 ];
 
-const mgmtQuestion = [
+const mgmtQs = [
 	{
 		type: "input",
 		message: "What is your office number?",
@@ -60,7 +80,7 @@ const mgmtQuestion = [
 	}
 ];
 
-const internQuestion = [
+const internQs = [
 	{
 		type: "input",
 		message: "What school do you attend?",
@@ -68,7 +88,7 @@ const internQuestion = [
 	}
 ];
 
-const newQuestion = [
+const newQs = [
     {
     type:"list",
         message:"Anymore employees?",
@@ -80,67 +100,46 @@ const newQuestion = [
     }
 ];
 
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
-
-function createEmployee() {
+function makeTeam() {
 	inquirer
-		.prompt(empQuestions)
+		.prompt(empQs)
 		.then(answers => {
 			switch (answers.role) {
 				case "Engineer":
-					inquirer.prompt(engQuestion).then(engineerAnswers => {
+					inquirer.prompt(engQs).then(engineerAnswers => {
 						const engineerInfo = new Engineer(
 							answers.name,
 							answers.id,
 							answers.email,
 							engineerAnswers.github
                         );
-						emplist.push(engineerInfo);
-						restartInq();
+						empList.push(engineerInfo);
+						restart();
 					});
 					break;
 				case "Manager":
-					inquirer.prompt(mgmtQuestion).then(managerAnswers => {
+					inquirer.prompt(mgmtQs).then(managerAnswers => {
 						const managerInfo = new Manager(
 							answers.name,
 							answers.id,
 							answers.email,
 							managerAnswers.number
 						);
-						emplist.push( managerInfo)
-				 		restartInq();
+						empList.push( managerInfo)
+				 		restart();
 					});
 					break;
 				case "Intern":
 					inquirer
-						.prompt(internQuestion).then( internAnswers => {
+						.prompt(internQs).then( internAnswers => {
 							const internInfo = new Intern(
 								answers.name,
 								answers.id,
 								answers.email,
-								internAnswers.internSchool
+								internAnswers.school
 							);
-							emplist.push(internInfo);
-							restartInq();
+							empList.push(internInfo);
+							restart();
 						});
 					break;
 			}
@@ -151,13 +150,13 @@ function createEmployee() {
         
 }
 
-createEmployee();
+makeTeam();
 
-function restartInq() {
-	inquirer.prompt(newQuestion).then(answer => {
+function restart() {
+	inquirer.prompt(newQs).then(answer => {
 		switch (answer.more) {
 			case "Yes":
-				createEmployee();
+				makeTeam();
 				break;
 
 			case "That's all!":
@@ -169,11 +168,7 @@ function restartInq() {
 
 
 function makeHTML() {
-	// fs.readFile("./templates/main.html", "utf8", (err, data) => {
-    //     if(err)
-    //     return err;
-	// 	const newData = data.replace("{{team}}", render);
-		const newData = render(emplist);
+		const newData = render(empList);
 		fs.writeFile(outputPath, newData, "utf8", err => {
 			if (err) return console.log(err);
 		});

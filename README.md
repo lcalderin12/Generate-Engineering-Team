@@ -1,12 +1,13 @@
 # Engineer Team Generator
   
+## Screenshots
+![](img/demo.png)
+<br>
 
 ## Table of contents
 - [Description](#Description)
 - [Installation](#Installation)
 - [Usage](#Usage)
-- [Licence](#Licence)
-- [Contributors](#Contributors)
 - [Test](#Test)
 - [Repository Link](#Repositories)
 - [Questions](#Questions?)
