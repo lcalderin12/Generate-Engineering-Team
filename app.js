@@ -10,6 +10,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+let emplist =[];
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -113,8 +114,7 @@ function createEmployee() {
 							answers.email,
 							engineerAnswers.github
                         );
-                        render(engineerInfo);
-
+						emplist.push(engineerInfo);
 						restartInq();
 					});
 					break;
@@ -126,7 +126,7 @@ function createEmployee() {
 							answers.email,
 							managerAnswers.number
 						);
-
+						emplist.push( managerInfo)
 				 		restartInq();
 					});
 					break;
@@ -139,7 +139,7 @@ function createEmployee() {
 								answers.email,
 								internAnswers.internSchool
 							);
-
+							emplist.push(internInfo);
 							restartInq();
 						});
 					break;
@@ -148,7 +148,6 @@ function createEmployee() {
 		.catch(err => {
 			throw err;
         });
-        
         
 }
 
@@ -170,15 +169,15 @@ function restartInq() {
 
 
 function makeHTML() {
-	fs.readFile("./templates/main.html", "utf8", (err, data) => {
-        if(err)
-        return err;
-		const newData = data.replace("{{team}}", render);
-
-		fs.writeFile("./output/index.html", newData, "utf8", err => {
+	// fs.readFile("./templates/main.html", "utf8", (err, data) => {
+    //     if(err)
+    //     return err;
+	// 	const newData = data.replace("{{team}}", render);
+		const newData = render(emplist);
+		fs.writeFile(outputPath, newData, "utf8", err => {
 			if (err) return console.log(err);
 		});
 		console.log("success");
-	});
+	// });
 }
 // ---------------------------------------------------
